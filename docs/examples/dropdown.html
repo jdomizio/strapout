@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script data-main="scripts/main" src="scripts/lib/require.2.1.14.debug.js"></script>
+</head>
+<body>
+    <div id="app" class="container" data-bind="with: dropdown">
+        <header>
+            <h1>Dropdown</h1>
+        </header>
+        <section class="panel" id="options">
+            <p>menu.isOpen: <span data-bind="text: menu.isOpen"></span></p>
+            <button class="btn" data-bind="click: menu.show">Show Menu</button>
+            <button class="btn" data-bind="click: menu.hide">Hide Menu</button>
+        </section>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand">Demo</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-bind="dropdown: { isOpen: menu.isOpen }">Dropdown Menu <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><h1 class="panel-title"><em>Header</em></h1></li>
+                                <li><a>Item 1</a></li>
+                                <li><a>Item 2</a></li>
+                                <li class="divider"></li>
+                                <li><h1 class="panel-title"><em>Other Group</em></h1></li>
+                                <li><a>Item 3</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

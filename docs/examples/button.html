@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script data-main="scripts/main" src="scripts/lib/require.2.1.14.debug.js"></script>
+</head>
+<body>
+<div id="app" class="container" data-bind="with: button">
+    <section class="row">
+        <header>
+            <h3>Stateful Button</h3>
+        </header>
+        <button class="btn" data-bind="stateButton: stateful, click: saveStateful.bind($data)">Save</button>
+    </section>
+    <section class="row">
+        <header>
+            <h3>Toggle Button</h3>
+        </header>
+        <div class="col-sm-3">
+            <button class="btn" data-bind="toggleButton: toggle">Toggle</button>
+        </div>
+        <div class="col-sm-3">
+            <label>active</label>
+            <div data-bind="text: toggle.active"></div>
+        </div>
+    </section>
+    <section class="row">
+        <header>
+            <h3>Check Button</h3>
+        </header>
+        <div class="col-sm-4">
+            <div class="btn-group" data-bind="checkButton: check" data-toggle="buttons">
+                <label class="btn btn-primary">
+                    <input  type="checkbox" value="Beef"> Beef
+                </label>
+                <label class="btn btn-primary">
+                    <input type="checkbox" value="Chicken"> Chicken
+                </label>
+                <label class="btn btn-primary">
+                    <input type="checkbox" value="Fish"> Fish
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <label>Selected
+                <ul data-bind="foreach: check.selected">
+                    <li data-bind="text: $data"></li>
+                </ul>
+            </label>
+        </div>
+    </section>
+    <section class="row">
+        <header>
+            <h3>Radio Button</h3>
+        </header>
+        <div class="col-sm-4">
+            <div class="btn-group" data-bind="radioButton: radio" data-toggle="buttons">
+                <label class="btn btn-primary">
+                    <input type="radio" name="side" value="Rice"> Rice
+                </label>
+                <label class="btn btn-primary">
+                    <input  type="radio" name="side" value="Beans"> Beans
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="side" value="Bananas"> Bananas
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <label>Selected
+                <span class="form-control" data-bind="text: radio.selected"></span>
+            </label>
+        </div>
+    </section>
+</div>
+</body>
+</html>

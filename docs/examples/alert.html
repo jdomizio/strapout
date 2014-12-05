@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script data-main="scripts/main" src="scripts/lib/require.2.1.14.debug.js"></script>
+</head>
+<body>
+<div id="app" class="container" data-bind="with: alertDialog">
+    <section class="row" data-bind="with: simple">
+        <header>
+            <h3>Simple Binding</h3>
+        </header>
+        <input data-bind="value: message" />
+        <button class="btn" data-bind="click: open.bind($data)">Press for Alert</button>
+        <div data-bind="alertDialog: $data">
+            <div class="alert alert-warning" data-role="alert" data-bind="text: message"></div>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script data-main="scripts/main" src="scripts/lib/require.2.1.14.debug.js"></script>
+</head>
+<body>
+<div id="app" class="container" data-bind="with: popover">
+    <section class="row" data-bind="with: simple">
+        <header>
+            <h3>Simple Binding</h3>
+        </header>
+        <button class="btn" title="A Title" data-content="Here is some content that has been transcribed." data-bind="popover: $data">Hover Over Me!</button>
+    </section>
+</div>
+</body>
+</html>

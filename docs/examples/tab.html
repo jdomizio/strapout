@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script data-main="scripts/main" src="scripts/lib/require.2.1.14.debug.js"></script>
+</head>
+<body>
+<div id="app" class="container" data-bind="with: tab">
+    <section class="row" data-bind="with: simple">
+        <header>
+            <h3>Simple Binding</h3>
+        </header>
+
+        <section class="panel-body">
+            <ul data-bind="foreach: tabs">
+                <li>Tab <span data-bind="text: $index"></span> active: <span data-bind="text: active"></span></li>
+            </ul>
+            <div data-bind="with: currentTab">
+                Current Tab Title: <input data-bind="textInput: title"></input>
+            </div>
+        </section>
+
+        <ul class="nav nav-tabs" role="tablist" data-bind="tabList: $data, foreach: tabs">
+            <li><a role="tab" data-toggle="tab" data-bind="tab: $data"></a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="Sponges" class="tab-pane">Tab Content 1</div>
+            <div id="Bricks" class="tab-pane">Tab Content 2</div>
+            <div id="Mortar" class="tab-pane">Tab Content 3</div>
+        </div>
+    </section>
+    <section class="row">
+        <header>
+            <h3>Todo</h3>
+        </header>
+        <div class="col-sm-12">
+            <ul>
+                <li>
+                    Be able to add tabs dynamically
+                </li>
+            </ul>
+        </div>
+    </section>
+</div>
+</body>
+</html>

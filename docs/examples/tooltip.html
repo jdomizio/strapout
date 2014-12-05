@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script data-main="scripts/main" src="scripts/lib/require.2.1.14.debug.js"></script>
+</head>
+<body>
+    <article id="app" class="container" data-bind="with: tooltip">
+        <section class="row">
+            <h1 class="page-header">Tooltip</h1>
+            <p>
+                A binding to display a bootstrap tooltip
+            </p>
+        </section>
+
+        <section class="row">
+            <h3>Basic Example</h3>
+            <p>This shows the default behavior for the binding / viewModel.</p>
+            <div class="panel panel-default">
+                <section class="panel-body">
+                    <h4>Demo</h4>
+                    <button class="btn" title="tooltip text" data-bind="tooltip: simpleTooltip">Hover Over Me!</button>
+                </section>
+                <footer class="panel-footer">
+                    <section>
+                        <h4>Binding Code</h4>
+                        <pre><p>&lt;button class="btn" title="tooltip text" data-bind="tooltip: simpleTooltip"&gt;Hover Over Me!&lt;/button&gt;</p></pre>
+                    </section>
+                    <section>
+                        <h4>ViewModel</h4>
+                        <pre><p>this.simpleTooltip = new Tooltip();</p></pre>
+                    </section>
+                </footer>
+            </div>
+        </section>
+
+        <section class="row">
+            <h3>Code-Configured Tooltips</h3>
+            <p>Options for displaying the tooltip can be configured within your viewModel</p>
+            <div class="panel panel-default">
+                <section class="panel-body">
+                    <h4>Demo</h4>
+                    <button class="btn" data-bind="tooltip: codeConfiguredTooltip">Hover Over Me!</button>
+                </section>
+
+                <footer class="panel-footer">
+                    <section>
+                        <h4>Binding Code</h4>
+                        <pre><p>&lt;button class="btn" data-bind="tooltip: codeConfiguredTooltip"&gt;Hover Over Me!&lt;/button&gt;</p></pre>
+                    </section>
+                    <section>
+                        <h4>ViewModel</h4>
+                        <pre><p>this.codeConfiguredTooltip = new Tooltip({
+    title: 'I was configured with code!',
+    options: {
+        placement: 'right'
+    }
+});</p></pre>
+                    </section>
+                </footer>
+            </div>
+        </section>
+
+        <section class="row">
+            <h3>Dynamic Behaviors</h3>
+            <p>You can change the state of the observable properties of the tooltip to have it reflect in your view</p>
+            <div class="panel panel-default">
+                <section class="panel-body">
+                    <h4>Demo</h4>
+                    <div class="container">
+                        <div class="col-sm-4">
+                            <div class="panel panel-default" data-bind="tooltip: behaviorTooltip">
+                                <h4 class="panel-body">To show tooltip you can hover over me or press the 'toggle' button.</h4>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label>Is tooltip showing?</label>
+                                        <div data-bind="text: behaviorTooltip.isOpen"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Title</label>
+                                        <input class="form-control" data-bind="textInput: behaviorTooltip.title" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <button class="btn btn-lg col-xs-12" data-bind="click: behaviorTooltip.toggle.bind(behaviorTooltip)">Toggle</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <footer class="panel-footer">
+                    <section>
+                        <h4>Binding Code</h4>
+                <pre><p>&lt;div class="panel" data-bind="tooltip: behaviorTooltip"&gt;
+    &lt;h3&gt;You can hover over me or press the 'toggle' button.&lt;/h3&gt;
+&lt;/div&gt;</p></pre>
+                    </section>
+                    <section>
+                        <h4>ViewModel</h4>
+                        <pre><p>this.behaviorTooltip = new Tooltip();
+this.behaviorTooltip.options.placement = 'bottom';
+this.behaviorTooltip.title('Default messages are awesome!');</p></pre>
+                    </section>
+                </footer>
+            </div>
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">NOTICE</h3>
+                </div>
+                <div class="panel-body">
+                    The value displayed in the tooltip will not change until the tooltip has been hidden
+                    and shown again.  This is in line with the behavior that is presented in Bootstrap
+                </div>
+            </div>
+        </section>
+
+        <section class="row">
+            <h3>Inline Configuration</h3>
+            <p>You can also define options in the <code>tooltip</code> binding</p>
+            <div class="panel panel-default">
+                <section class="panel-body">
+                    <h4>Demo</h4>
+                    <button class="btn" data-bind="tooltip: inlineTooltip, tooltipOptions: { title: 'Configured in binding', placement: 'right', trigger: 'click' }">Click Me!</button>
+                </section>
+                <footer class="panel-footer">
+                    <section>
+                        <h4>Binding Code</h4>
+                        <pre><p>&lt;button class="btn" data-bind="tooltip: inlineTooltip,
+                               tooltipOptions: { title: 'Configured in binding', placement: 'left', trigger: 'click' }"&gt;Click Me!&lt;/button&gt;</p></pre>
+                    </section>
+                    <section>
+                        <h4>ViewModel</h4>
+                        <pre><p>this.inlineTooltip = new Tooltip();</p></pre>
+                    </section>
+                </footer>
+            </div>
+        </section>
+    </article>
+</body>
+</html>
