@@ -7,13 +7,157 @@
     <script data-main="scripts/main" src="scripts/lib/require.2.1.14.debug.js"></script>
 </head>
 <body>
-<div id="app" class="container" data-bind="with: popover">
-    <section class="row" data-bind="with: simple">
-        <header>
-            <h3>Simple Binding</h3>
-        </header>
-        <button class="btn" title="A Title" data-content="Here is some content that has been transcribed." data-bind="popover: $data">Hover Over Me!</button>
+<article id="app" class="container" data-bind="with: popover">
+    <section class="row">
+        <h1 class="page-header">Popover</h1>
+        <p>
+            A binding to display a bootstrap popover
+        </p>
     </section>
-</div>
+    <section class="row">
+        <h3>Basic Example</h3>
+        <p>This shows the default behavior for the binding and viewModel.</p>
+        <div class="panel panel-default">
+            <section class="panel-body">
+                <h4>Demo</h4>
+                <button class="btn" title="Success" data-content="You have clicked a button.  Click it again to dismiss." data-bind="popover: simple">Click Me!</button>
+            </section>
+            <footer class="panel-footer">
+                <section>
+                    <h4>Binding Code</h4>
+                    <pre>&lt;button class="btn" title="Success" data-content="You have clicked a button.  Click it again to dismiss." data-bind="popover: simple"&gt;Click Me!&lt;/button&gt;</pre>
+                </section>
+                <section>
+                    <h4>ViewModel</h4>
+                    <pre>this.simple = new Popover();</pre>
+                </section>
+            </footer>
+        </div>
+    </section>
+    <section class="row">
+        <h3>Code Configuration</h3>
+        <p>This shows how the popover may be configured solely from the viewModel</p>
+        <div class="panel panel-default">
+            <section class="panel-body">
+                <h4>Demo</h4>
+                <button class="btn" data-bind="popover: codeConfigured">Hover over Me!</button>
+            </section>
+            <footer class="panel-footer">
+                <section>
+                    <h4>Binding Code</h4>
+                    <pre>&lt;button class="btn" data-bind="popover: codeConfigured"&gt;Hover over Me!&lt;/button&gt;</pre>
+                </section>
+                <section>
+                    <h4>ViewModel</h4>
+                    <pre>this.codeConfigured = new Popover({
+    title: 'Code-Configured',
+    content: 'This message was configured within the viewModel.',
+    options: {
+        trigger: 'hover'
+    }
+});</pre>
+                </section>
+            </footer>
+        </div>
+    </section>
+    <section class="row">
+        <h3>Inline Configuration</h3>
+        <p>This shows how the popover may be configured from the binding</p>
+        <div class="panel panel-default">
+            <section class="panel-body">
+                <h4>Demo</h4>
+                <button class="btn"
+                        title="Inline-Configuration"
+                        data-content="This popover was configured from a mixture of data-attributes and bindings"
+                        data-bind="popover: inlineConfigured, popoverOptions: { trigger: 'hover' }">Hover over Me!</button>
+            </section>
+            <footer class="panel-footer">
+                <section>
+                    <h4>Binding Code</h4>
+                        <pre>&lt;button class="btn"
+    title="Inline-Configuration"
+    data-content="This popover was configured from a mixture of data-attributes and bindings"
+    data-bind="popover: inlineConfigured, popoverOptions: { trigger: 'hover' }"&gt;Hover over Me!&lt;/button&gt;</pre>
+                </section>
+                <section>
+                    <h4>ViewModel</h4>
+                    <pre>this.inlineConfigured = new Popover();</pre>
+                </section>
+            </footer>
+        </div>
+    </section>
+
+    <section class="row">
+        <h3>Observability</h3>
+        <p>You can change the state of the observable properties of the popover to have it reflect in your view</p>
+        <div class="panel panel-default">
+            <section class="panel-body">
+                <h4>Demo</h4>
+                <div class="container">
+                    <div class="col-sm-4">
+                        <div class="panel panel-default" data-bind="popover: observabilityDemoPopover">
+                            <h4 class="panel-body">To show popover you can hover over me or press the 'toggle' button.</h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Is popover showing?</label>
+                                    <div data-bind="text: observabilityDemoPopover.isOpen"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input class="form-control" data-bind="textInput: observabilityDemoPopover.title" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Content</label>
+                                    <input class="form-control" data-bind="textInput: observabilityDemoPopover.content" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <button class="btn btn-lg col-xs-12" data-bind="click: observabilityDemoPopover.toggle.bind(observabilityDemoPopover)">Toggle</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer class="panel-footer">
+                <section>
+                    <h4>Binding Code</h4>
+                <pre>&lt;div class="panel panel-default" data-bind="popover: observabilityDemoPopover"&gt;
+    &lt;h4 class="panel-body"&gt;To show popover you can hover over me or press the 'toggle' button.&lt;/h4&gt;
+&lt;/div&gt;</pre>
+                </section>
+                <section>
+                    <h4>ViewModel</h4>
+                        <pre>this.observabilityDemoPopover = new Popover({
+    title: 'I am a title',
+    content: 'I am a content.',
+    options: {
+        placement: 'bottom',
+        trigger: 'hover'
+    }
+});</pre>
+                </section>
+            </footer>
+        </div>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h3 class="panel-title">NOTICE</h3>
+            </div>
+            <div class="panel-body">
+                The text for <code>title</code> and <code>content</code> displayed in the popover will not change until the popover has been hidden
+                and shown again.  This is in line with the behavior that is presented in Bootstrap
+            </div>
+        </div>
+    </section>
+</article>
 </body>
 </html>
