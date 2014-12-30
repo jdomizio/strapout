@@ -17,6 +17,7 @@ define(function(require) {
         this.title = util.createObservable(params.title);
         this.content = util.createObservable(params.content); // body text
         this.isOpen = util.createObservable(params.isOpen || false);
+        this.template = util.createObservable(params.template);
         this.options = params.options || {};
         this.element = null;
     }
@@ -51,6 +52,7 @@ define(function(require) {
             util.setObservableProperty('title', params, this);
             util.setObservableProperty('content', params, this);
             util.setObservableProperty('isOpen', params, this);
+            util.setObservableProperty('template', params, this);
             if (params.options) {
                 $.extend(this.options, params.options);
             }
@@ -69,6 +71,13 @@ define(function(require) {
         }
         else if(typeof this.content() !== 'undefined') {
             this.options.content = this.content();
+        }
+
+        if(this.options.template) {
+            this.template(this.options.template);
+        }
+        else if(typeof this.template() !== 'undefined') {
+            this.options.template = this.template();
         }
 
         // initialize the plugin
@@ -109,6 +118,25 @@ define(function(require) {
         if(ko.isSubscribable(this.content)) {
             this.content.subscribe(function(v) {
                 $(element).data('bs.popover').options.content = v;
+            });
+        }
+        if(ko.isSubscribable(this.template)) {
+            this.template.subscribe(function(v) {
+                var popover = $(element).data('bs.popover');
+                if(!popover) {
+                    popover.options.template = v;
+                }
+
+                /* there be danger here - if the popover is open and we change the $tip
+                 * we will remove the reference that bootstrap uses to remove the popover
+                 * element */
+                else if(popover.$tip) {
+                    if(popover.tip().hasClass('in')) {
+                        self.close();
+                    }
+
+                    popover.$tip = $(v);
+                }
             });
         }
     };

@@ -90,6 +90,15 @@
     <section class="row">
         <h3>Observability</h3>
         <p>You can change the state of the observable properties of the popover to have it reflect in your view</p>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h3 class="panel-title">NOTICE</h3>
+            </div>
+            <div class="panel-body">
+                The text for <code>title</code> and <code>content</code> displayed in the popover will not change until the popover has been hidden
+                and shown again.  This is in line with the behavior that is presented in Bootstrap
+            </div>
+        </div>
         <div class="panel panel-default">
             <section class="panel-body">
                 <h4>Demo</h4>
@@ -148,27 +157,99 @@
                 </section>
             </footer>
         </div>
+    </section>
+
+    <section class="row">
+        <h3>Observable Template Example</h3>
+        <p>This shows how you can supply a different template after the popover has been created.</p>
         <div class="panel panel-warning">
             <div class="panel-heading">
                 <h3 class="panel-title">NOTICE</h3>
             </div>
             <div class="panel-body">
-                The text for <code>title</code> and <code>content</code> displayed in the popover will not change until the popover has been hidden
-                and shown again.  This is in line with the behavior that is presented in Bootstrap
+                Just like how you cannot change <code>title</code> and <code>content</code> while the popover is being displayed, you also cannot change
+                <code>template</code> and have the change immediately show.  Additionally, if you do change <code>template</code> while the popover is being
+                displayed, the popover will be immediately closed.  If you need to display the popover afterwards, it is your responsibility to
+                do so.
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <section class="panel-body">
+                <h4>Demo</h4>
+                <div class="col-xs-6">
+                    <button class="btn" data-bind="popover: templatePopover">Click Me!</button>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <button class="btn" data-bind="click: setTemplate('regular'), css: { 'active': isSelected('regular') }">Regular</button>
+                    <button class="btn" data-bind="click: setTemplate('fancy'), css: { 'active': isSelected('fancy') }">Fancy</button>
+                </div>
+            </section>
+            <footer class="panel-footer">
+                <section>
+                    <h4>Binding Code</h4>
+                    <pre>&lt;div class=&quot;col-xs-6&quot;&gt;
+    &lt;button class=&quot;btn&quot; data-bind=&quot;popover: templatePopover&quot;&gt;Click Me!&lt;/button&gt;
+&lt;/div&gt;
+&lt;div class=&quot;col-xs-6 text-right&quot;&gt;
+    &lt;button class=&quot;btn&quot; data-bind=&quot;click: setTemplate('regular'), css: { 'active': isSelected('regular') }&quot;&gt;Regular&lt;/button&gt;
+    &lt;button class=&quot;btn&quot; data-bind=&quot;click: setTemplate('fancy'), css: { 'active': isSelected('fancy') }&quot;&gt;Fancy&lt;/button&gt;
+&lt;/div&gt;</pre>
+                </section>
+                <section>
+                    <h4>ViewModel</h4>
+                    <pre>this.templates = {
+    'regular': '&lt;div class=&quot;popover&quot; role=&quot;tooltip&quot;&gt;&lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;' +
+               '&lt;h3 class=&quot;popover-title&quot; style=&quot;font-style: italic;&quot;&gt;&lt;/h3&gt;' +
+               '&lt;div class=&quot;popover-content&quot;&gt;&lt;/div&gt;&lt;/div&gt;',
+    'fancy': '&lt;div class=&quot;popover&quot; role=&quot;tooltip&quot;&gt;&lt;div class=&quot;arrow&quot;&gt;&lt;/div&gt;' +
+             '&lt;h2 class=&quot;popover-title&quot; style=&quot;font-weight: bold; background-color: red; color: white;&quot;&gt;&lt;/h3&gt;' +
+             '&lt;div class=&quot;popover-content&quot;&gt;&lt;/div&gt;&lt;/div&gt;'
+};
+
+this.templatePopover = new Popover({
+    title: 'Template',
+    content: 'Click regular or fancy to change template styles.',
+    options: {
+        trigger: 'click'
+    },
+    template: this.templates['regular']
+});
+
+this.setTemplate = function(templateName) {
+    return function() {
+        self.templatePopover.template(self.templates[templateName]);
+    };
+};
+
+this.isSelected = function(templateName) {
+    return self.templatePopover.template() == self.templates[templateName];
+}</pre>
+                </section>
+            </footer>
+        </div>
+    </section>
+
+    <section class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h3>FAQs</h3>
+                <div>
+                    <div>
+                        Q: Why is the observable property for template so bad?
+                    </div>
+                    <div>
+                        A: Bootstrap doesn't really support popover templates being changed, that is a hack that this library is accomplishing by
+                           changing the bs.popover.$tip element.
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-    <section>
-        <h3>FAQs</h3>
-        <div>
-            <div>
-                Q: Why isn't there an observable property for template?
-            </div>
-            <div>
-                A: Bootstrap popover templates cannot be changed after they are created, that is by design of the TWBS team.
-            </div>
-        </div>
-    </section>
+
+    <footer class="row text-center">
+        <a href="index.html">Back</a>
+    </footer>
 </article>
 </body>
 </html>
