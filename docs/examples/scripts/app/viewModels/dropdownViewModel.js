@@ -1,27 +1,25 @@
 /**
  * Created by Jason on 8/24/2014.
  */
-define(['knockout', 'jquery', 'bootstrap', '../../../../../src/dropdown'], function(ko, $, bs) {
+define(function(require) {
+    'use strict';
 
-    function DropdownViewModel() {
-        this.menu = new Menu();
-    }
+    var ko = require('knockout'),
+        Dropdown = require('../../../../../src/dropdown');
 
-    function Menu() {
+    require('bootstrap');
+
+    function ViewModel() {
         var self = this;
 
-        this.isOpen = ko.observable(false);
-        this.show = function() {
-            self.isOpen(true);
-        };
+        this.simple = new Dropdown();
 
-        this.hide = function() {
-            self.isOpen(false);
-        };
+        this.inlineIsOpen = ko.observable(false);
+
+        this.dynamicDropdown = new Dropdown();
     }
 
     return {
-        Viewmodel: DropdownViewModel,
-        Menu: Menu
+        ViewModel: ViewModel
     };
 });

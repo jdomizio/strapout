@@ -7,7 +7,7 @@ function(modal, dropdown, tooltip, popover, button, tab, alertDialog) {
 
     function AppViewModel() {
         this.modal = new modal.ViewModel();
-        this.dropdown = new dropdown.Viewmodel();
+        this.dropdown = new dropdown.ViewModel();
         this.tooltip = new tooltip.ViewModel();
         this.popover = new popover.ViewModel();
         this.button = new button.ViewModel();

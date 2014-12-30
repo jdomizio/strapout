@@ -1,234 +1,97 @@
-/**
- * Created by Jason on 8/23/2014.
- */
-define(['jquery', 'knockout', 'bootstrap'], function($, ko, bs) {
-    "use strict";
-    var sharedOverlay;
+define(function(require) {
+    'use strict';
 
-    // TODO: Refactor DropOverlay out of dropdown
-    function DropOverlay() {
-        this.isShowing = false;
-        this.currentTimeout = null;
-        this.currentOverlay = null;
+    var $ = require('jquery'),
+        ko = require('knockout'),
+        util = require('./util');
+
+    require('bootstrap');
+
+    function Dropdown(params) {
+        params = params || {};
+
+        this.isOpen = util.createObservable(params.isOpen || false);
+        this.element = null;
     }
 
-    DropOverlay.prototype.hide = function(time) {
-        var self = this;
+    Dropdown.prototype.init = function(element, valueAccessor, allBindings) {
+        var self = this,
+            params,
+            $element,
+            $elementParent;
 
-        time = arguments.length ? time : 100;
+        params = valueAccessor();
 
-        this.currentTimeout = window.setTimeout(function() {
-            $('.kobs-overlay').fadeOut(time, function () {
-                $(this).remove();
-            });
-            self.isShowing = false;
-            self.currentTimeout = null;
-            self.currentOverlay = null;
-        }, 200);
-    };
-
-    DropOverlay.prototype.create = function($element, options) {
-        var container, i, len;
-
-        if(this.currentTimeout) {
-            window.clearTimeout(this.currentTimeout);
-            $(this.currentOverlay).off('click touchstart');
-            if(options.click) {
-                $(this.currentOverlay).on('click touchstart', function(e) {
-                    options.click(e);
-                });
-            }
-            return;
+        if(!(params instanceof Dropdown) && ko.isObservable(params)) {
+            this.isOpen = params;
         }
 
-        container = $('<div/>');
-        container.addClass('kobs-overlay');
-        if(options.overlayWrapClasses) {
+        // initialize the plugin
+        this.element = element;
 
-            for(i = 0, len = options.overlayWrapClasses.length; i < len; ++i) {
-                container.addClass(options.overlayWrapClasses[i]);
-            }
-        }
-//            if(options.overlayDepth) {
-//                container.attr('style', 'z-index: ' + options.overlayDepth + ' !important;');
-//            }
-
-        var overlay = $('<div/>');
-        if(options.overlayClasses) {
-
-            for(i = 0, len = options.overlayClasses.length; i < len; ++i) {
-                overlay.addClass(options.overlayClasses[i]);
-            }
-        }
-        if(options.overlayDepth) {
-            overlay.attr('style', 'z-index: ' + options.overlayDepth + ' !important;');
-        }
-
-        container.append(overlay);
-
-        if(options.click) {
-            container.on('click touchstart', function(e){
-                options.click(e);
-            });
-        }
-
-        this.currentOverlay = container;
-
-        $element.append(container).fadeIn(100);
-        this.isShowing = true;
-    };
-
-    sharedOverlay = new DropOverlay();
-
-    function Dropdown() {
-        this.isOpen = false;
-        this.initElement = null;
-    }
-
-    Dropdown.prototype.init = function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-        var value, onOpen, onClose, $element, $elementParent, clickHandler, self = this;
-
-        value = new DropdownViewModel(valueAccessor());
-        if(value.overlayCloseOnClick) {
-            value.click = function() {
-                self.close(element);
-            };
-        }
+        // required by bootstrap
         $element = $(element);
-
         if (!$element.attr('data-toggle')) {
             $element.attr('data-toggle', 'dropdown');
         }
         $element.dropdown();
 
-        // handle opening / closing via subscription
-        if (value.isOpen && ko.isSubscribable(value.isOpen)) {
-
-            /* Remove click handler from element so we can handle it instead */
-            $element.off('click.bs.dropdown');
-
-            /* Remove data-api click handler from element so it doesn't override us */
-            $(element).on('click.bs.dropdown.data-api', function (e) {
-                e.stopPropagation();
-            });
-
-            value.isOpen.subscribe(function (v) {
-                if (v) {
-                    self.open(element);
-                }
-                else {
-                    self.close(element);
-                }
-            });
-        }
-
-        // handle updating isOpen if something other than us closed the menu
-        if (ko.isWriteableObservable(value.isOpen)) {
+        // subscribe to popover events
+        if(ko.isWriteableObservable(this.isOpen)) {
             $elementParent = $element.parent();
-
-            $elementParent.on('show.bs.dropdown', function () {
-                if (value.slide) {
-                    $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
-                }
-                else if (value.fade) {
-                    $(this).find('.dropdown-menu').first().stop(true, true).fadeIn();
-                }
-
-                if(value.showOverlay) {
-                    sharedOverlay.create($(value.overlayTarget), value);
-                }
-
-                value.isOpen(true);
-                if (typeof value.onOpen === 'function') {
-                    value.onOpen();
+            $elementParent.on('show.bs.dropdown', function() {
+                if(self.isOpen()) {
+                    return false;
                 }
             });
-            $elementParent.on('hidden.bs.dropdown', function () {
-                if (value.slide) {
-                    $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
-                    sharedOverlay.hide();
+            $elementParent.on('shown.bs.dropdown', function() {
+                self.isOpen(true);
+            });
+            $elementParent.on('hide.bs.dropdown', function() {
+                if(!self.isOpen()) {
+                    return false;
                 }
-                else if (value.fade) {
-                    $(this).find('.dropdown-menu').first().stop(true, true).fadeOut();
-                    sharedOverlay.hide();
-                }
-                else {
-                    sharedOverlay.hide(0);
-                }
-
-                // handle the case where external event closes us
-                if(self.isOpen) {
-                    self.isOpen = false;
-                }
-                value.isOpen(false);
-                if (typeof value.onClose === 'function') {
-                    value.onClose();
-                }
+            });
+            $elementParent.on('hidden.bs.dropdown', function() {
+                self.isOpen(false);
             });
         }
 
-        // handle click
-        ko.applyBindingsToNode(element, {
-            'click': function () {
-                self.toggle(self.isOpen, value.isOpen);
-            }
-        });
+        // propagate observable changes to bootstrap
+        if(ko.isSubscribable(this.isOpen)) {
 
-        return {
-            controlsDescendantBindings: false
-        };
+            ///* Remove click handler from element so we can handle it instead */
+            //$element.off('click.bs.dropdown');
+            //
+            ///* Remove data-api click handler from element so it doesn't override us */
+            //$(element).on('click.bs.dropdown.data-api', function (e) {
+            //    e.stopPropagation();
+            //});
+
+            this.isOpen.subscribe(function (v) {
+                //self[!!v ? 'open' : 'close']();
+            });
+        }
     };
-
-    Dropdown.prototype.update = function () { };
-
-    Dropdown.prototype.open = function (element) {
-        if (!this.isOpen) {
-            $(element).dropdown('toggle');
-            this.isOpen = true;
+    Dropdown.prototype.open = function() {
+        if(!this.isOpen()) {
+            $(this.element).dropdown('toggle');
         }
     };
 
-    Dropdown.prototype.close = function (element) {
-        if (this.isOpen) {
-            $(element).dropdown('toggle');
-            this.isOpen = false;
+    Dropdown.prototype.close = function() {
+        if(this.isOpen()) {
+            $(this.element).dropdown('toggle');
         }
     };
 
-    /**
-     * Toggles state of isOpen based on value
-     * @param value - the current state of the dropDown (true - open, false - closed)
-     * @param isOpen - an observable that holds the state of whether the dropdown is open
-     */
-    Dropdown.prototype.toggle = function (isCurrentlyOpen, isOpen) {
-        isOpen(!isCurrentlyOpen);
+    Dropdown.prototype.toggle = function() {
+        $(this.element).dropdown('toggle');
     };
 
-    var handler = new Dropdown();
     ko.bindingHandlers['dropdown'] = {
-        init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-            (new Dropdown()).init(element, valueAccessor, allBindings, viewModel, bindingContext);
-        }
+        'init': util.initBindingHandler(Dropdown)
     };
 
-    function DropdownViewModel(data) {
-        data = data || {};
-        this.isOpen = data.isOpen || ko.observable(false);
-
-        this.slide = data.slide || false;
-        this.fade = data.fade || false;
-        this.onOpen = data.onOpen;
-
-        this.showOverlay = data.showOverlay || false;
-        this.overlayDepth = data.overlayDepth || '100';
-        this.overlayTarget = data.overlayTarget || '.kobs-overlay-target'
-        this.overlayWrapClasses = data.overlayWrapClasses || ['overlay-wrapper'];
-        this.overlayClasses = data.overlayClasses || ['overlay'];
-        this.overlayCloseOnClick = typeof data.overlayCloseOnClick === 'undefined' ? true : data.overlayCloseOnClick;
-    }
-
-    return {
-        Dropdown: Dropdown,
-        ViewModel: DropdownViewModel
-    };
+    return Dropdown;
 });
