@@ -64,7 +64,7 @@ define(function(require) {
             });
         }
     };
-    
+
     Dropdown.prototype.open = function() {
         if(!this.isOpen()) {
             $(this.element).dropdown('toggle');
