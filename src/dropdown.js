@@ -39,37 +39,28 @@ define(function(require) {
         // subscribe to popover events
         if(ko.isWriteableObservable(this.isOpen)) {
             $elementParent = $element.parent();
-            $elementParent.on('show.bs.dropdown', function() {
+            $elementParent.on('show.bs.dropdown', function(e) {
                 if(self.isOpen()) {
                     return false;
                 }
             });
-            $elementParent.on('shown.bs.dropdown', function() {
+            $elementParent.on('shown.bs.dropdown', function(e) {
                 self.isOpen(true);
             });
-            $elementParent.on('hide.bs.dropdown', function() {
+            $elementParent.on('hide.bs.dropdown', function(e) {
                 if(!self.isOpen()) {
                     return false;
                 }
             });
-            $elementParent.on('hidden.bs.dropdown', function() {
+            $elementParent.on('hidden.bs.dropdown', function(e) {
                 self.isOpen(false);
             });
         }
 
         // propagate observable changes to bootstrap
         if(ko.isSubscribable(this.isOpen)) {
-
-            ///* Remove click handler from element so we can handle it instead */
-            //$element.off('click.bs.dropdown');
-            //
-            ///* Remove data-api click handler from element so it doesn't override us */
-            //$(element).on('click.bs.dropdown.data-api', function (e) {
-            //    e.stopPropagation();
-            //});
-
             this.isOpen.subscribe(function (v) {
-                //self[!!v ? 'open' : 'close']();
+                self[!!v ? 'open' : 'close']();
             });
         }
     };

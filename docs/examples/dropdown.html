@@ -159,8 +159,7 @@
                             Value of <code>dynamicDropdown.isOpen</code>: <span data-bind="text: dynamicDropdown.isOpen"></span>
                         </div>
                         <div class="col-xs-6 text-right">
-                            <button class="btn" data-bind="click: dynamicDropdown.open.bind(dynamicDropdown)">Open</button>
-                            <button class="btn" data-bind="click: dynamicDropdown.close.bind(dynamicDropdown)">Close</button>
+                            <button class="btn" data-bind="event: mouseEvents">Hover over me</button>
                         </div>
                     </div>
                 </div>
@@ -185,6 +184,63 @@
                         </div>
                     </div>
                 </nav>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">NOTICE</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>The <code>data-api</code> events for a bootstrap <code>dropdown</code> will cause the dropdown to close
+                        if you tie the opening of the dropdown to another click event. If this is something you need to do,
+                        you may either want to consider a different dropdown menu, or disable the data-api. That's why this demo
+                        is using a hover instead of a click.</p>
+                        <p>Notice that if you click the button while the dropdown is showing, it
+                        will close. This is expected because we have not disabled the data-api.</p>
+                    </div>
+                </div>
+                <footer class="panel-footer">
+                    <section>
+                        <h4>Binding Code</h4>
+                        <pre>&lt;div class=&quot;panel panel-default&quot;&gt;
+    &lt;div class=&quot;panel-body&quot;&gt;
+        &lt;div class=&quot;col-xs-6&quot;&gt;
+            Value of &lt;code&gt;dynamicDropdown.isOpen&lt;/code&gt;: &lt;span data-bind=&quot;text: dynamicDropdown.isOpen&quot;&gt;&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;col-xs-6 text-right&quot;&gt;
+            &lt;button class=&quot;btn&quot; data-bind=&quot;event: mouseEvents&quot;&gt;Hover over me&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;nav class=&quot;navbar navbar-default&quot;&gt;
+    &lt;div class=&quot;container-fluid&quot;&gt;
+        &lt;div class=&quot;navbar-header&quot;&gt;
+            &lt;div class=&quot;navbar-brand&quot;&gt;Dropdown Binding&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;navbar-collapse collapse&quot;&gt;
+            &lt;ul class=&quot;nav navbar-nav&quot;&gt;
+                &lt;li class=&quot;dropdown&quot; style=&quot;cursor: pointer;&quot;&gt;
+                    &lt;a class=&quot;dropdown-toggle&quot; role=&quot;button&quot; data-bind=&quot;dropdown: dynamicDropdown&quot;&gt;
+                        Dropdown Menu
+                        &lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;
+                    &lt;/a&gt;
+                    &lt;ul class=&quot;dropdown-menu&quot; role=&quot;menu&quot;&gt;
+                        &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot;&gt;Item one&lt;/a&gt;&lt;/li&gt;
+                        &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot;&gt;Item two&lt;/a&gt;&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/nav&gt;</pre>
+                    </section>
+                    <section>
+                        <h4>ViewModel</h4>
+                        <pre>this.dynamicDropdown = new Dropdown();
+this.mouseEvents = {
+    'mouseover': this.dynamicDropdown.open.bind(this.dynamicDropdown),
+    'mouseleave': this.dynamicDropdown.close.bind(this.dynamicDropdown)
+};</pre>
+                    </section>
+                </footer>
             </section>
         </div>
     </section>

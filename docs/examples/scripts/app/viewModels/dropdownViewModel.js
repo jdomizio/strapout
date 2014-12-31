@@ -17,6 +17,10 @@ define(function(require) {
         this.inlineIsOpen = ko.observable(false);
 
         this.dynamicDropdown = new Dropdown();
+        this.mouseEvents = {
+            'mouseover': this.dynamicDropdown.open.bind(this.dynamicDropdown),
+            'mouseleave': this.dynamicDropdown.close.bind(this.dynamicDropdown)
+        };
     }
 
     return {
