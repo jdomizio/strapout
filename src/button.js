@@ -3,7 +3,7 @@ define(function(require) {
 
     var $ = require('jquery'),
         ko = require('knockout'),
-        util = require('./util'),
+        util = require('./util/util'),
         StateButton = require('./stateButton'),
         ToggleButton = require('./toggleButton'),
         CheckButton = require('./checkButton'),

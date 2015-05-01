@@ -1,11 +1,4 @@
-define(function(require) {
-    'use strict';
-
-    var $ = require('jquery'),
-        ko = require('knockout'),
-        util = require('./util');
-
-    require('bootstrap');
+strapout.CheckButton = (function() {
 
     function CheckButton() {
         this.element = null;
@@ -21,7 +14,7 @@ define(function(require) {
         if (params instanceof CheckButton) {
         }
         else {
-            util.setObservableProperty('selected', params, this);
+            setObservableProperty('selected', params, this);
         }
 
         this.element = element;
@@ -59,8 +52,8 @@ define(function(require) {
     };
 
     ko.bindingHandlers['checkButton'] = {
-        init: util.initBindingHandler(CheckButton)
+        init: initBindingHandler(CheckButton)
     };
 
     return CheckButton;
-});
+})();

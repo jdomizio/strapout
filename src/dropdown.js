@@ -1,16 +1,9 @@
-define(function(require) {
-    'use strict';
-
-    var $ = require('jquery'),
-        ko = require('knockout'),
-        util = require('./util');
-
-    require('bootstrap');
+strapout.Dropdown = (function() {
 
     function Dropdown(params) {
         params = params || {};
 
-        this.isOpen = util.createObservable(params.isOpen || false);
+        this.isOpen = createObservable(params.isOpen || false);
         this.element = null;
     }
 
@@ -82,8 +75,8 @@ define(function(require) {
     };
 
     ko.bindingHandlers['dropdown'] = {
-        'init': util.initBindingHandler(Dropdown)
+        'init': initBindingHandler(Dropdown)
     };
 
     return Dropdown;
-});
+})();

@@ -1,17 +1,6 @@
-/**
- * Created by Jason on 8/23/2014.
- */
-; define(function(require) {
-    "use strict";
 
-    var $ = require('jquery'),
-        ko = require('knockout'),
-        util = require('./util'),
-        CONTAINER_MARKER;
-
-    require('bootstrap');
-
-    CONTAINER_MARKER = 'tabContainer';
+var tabs = (function() {
+    var CONTAINER_MARKER = 'tabContainer';
 
     function wrap(object) {
         if(ko.isObservable(object)) {
@@ -81,7 +70,7 @@
     };
 
     ko.bindingHandlers['tabList'] = {
-        init: util.initBindingHandler(TabList)
+        init: initBindingHandler(TabList)
     };
 
     function Tab(options) {
@@ -108,7 +97,7 @@
         else {
             container = this.closestTabList(element);
             container.add(this);
-            util.setObservableProperty('title', params, this);
+            setObservableProperty('title', params, this);
         }
 
         if(!allBindings.has('text')) {
@@ -162,7 +151,7 @@
     };
 
     Tab.prototype.closestTabList = function(element) {
-        var closest = util.closestMarker(element, CONTAINER_MARKER),
+        var closest = closestMarker(element, CONTAINER_MARKER),
             provider = ko.bindingProvider['instance'],
             context, bindings;
 
@@ -174,7 +163,7 @@
     };
 
     ko.bindingHandlers['tab'] = {
-        init: util.initBindingHandler(Tab)
+        init: initBindingHandler(Tab)
     };
 
     ko.bindingHandlers['tabContent'] = {
@@ -187,4 +176,7 @@
         TabList: TabList,
         Tab: Tab
     };
-});
+})();
+
+strapout.TabList = tabs.TabList;
+strapout.Tab = tabs.Tab;

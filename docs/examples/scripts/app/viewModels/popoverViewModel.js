@@ -1,8 +1,10 @@
 /**
  * Created by jdomizio on 10/16/2014.
  */
-define(['knockout', 'jquery', '../../../../../src/popover', 'bootstrap'], function(ko, $, Popover) {
+define(['knockout', 'jquery', 'strapout', 'bootstrap'], function(ko, $, strapout) {
     'use strict';
+
+    var Popover = strapout.Popover;
 
     function ViewModel() {
         var self = this;

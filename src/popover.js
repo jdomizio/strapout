@@ -2,22 +2,15 @@
  * ViewModel / Binding for a bootstrap popover
  * 12/5/2014 - Added comments, constructor options
  */
-define(function(require) {
-    'use strict';
-
-    var $ = require('jquery'),
-        ko = require('knockout'),
-        util = require('./util');
-
-    require('bootstrap');
+strapout.Popover = (function() {
 
     function Popover(params) {
         params = params || {};
 
-        this.title = util.createObservable(params.title);
-        this.content = util.createObservable(params.content); // body text
-        this.isOpen = util.createObservable(params.isOpen || false);
-        this.template = util.createObservable(params.template);
+        this.title = createObservable(params.title);
+        this.content = createObservable(params.content); // body text
+        this.isOpen = createObservable(params.isOpen || false);
+        this.template = createObservable(params.template);
         this.options = params.options || {};
         this.element = null;
     }
@@ -49,10 +42,10 @@ define(function(require) {
             }
         }
         else {
-            util.setObservableProperty('title', params, this);
-            util.setObservableProperty('content', params, this);
-            util.setObservableProperty('isOpen', params, this);
-            util.setObservableProperty('template', params, this);
+            setObservableProperty('title', params, this);
+            setObservableProperty('content', params, this);
+            setObservableProperty('isOpen', params, this);
+            setObservableProperty('template', params, this);
             if (params.options) {
                 $.extend(this.options, params.options);
             }
@@ -166,8 +159,8 @@ define(function(require) {
     };
 
     ko.bindingHandlers['popover'] = {
-        init: util.initBindingHandler(Popover)
+        init: initBindingHandler(Popover)
     };
 
     return Popover;
-});
+})();

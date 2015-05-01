@@ -1,11 +1,4 @@
-define(function(require) {
-    'use strict';
-
-    var $ = require('jquery'),
-        ko = require('knockout'),
-        util = require('./util');
-
-    require('bootstrap');
+strapout.StateButton = (function() {
 
     function StateButton() {
         this.state = ko.observable('default');
@@ -98,7 +91,7 @@ define(function(require) {
         if(params instanceof StateButton) {
         }
         else {
-            util.setObservableProperty('state', params, this);
+            setObservableProperty('state', params, this);
         }
 
         this.element = element;
@@ -134,9 +127,9 @@ define(function(require) {
     };
 
     ko.bindingHandlers['stateButton'] = {
-        init: util.initBindingHandler(StateButton)
+        init: initBindingHandler(StateButton)
     };
 
 
     return StateButton;
-});
+})();

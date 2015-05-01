@@ -5,9 +5,11 @@ define(function(require) {
     'use strict';
 
     var ko = require('knockout'),
-        Dropdown = require('../../../../../src/dropdown');
+        strapout = require('strapout');
 
     require('bootstrap');
+
+    var Dropdown = strapout.Dropdown;
 
     function ViewModel() {
         var self = this;

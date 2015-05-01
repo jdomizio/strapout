@@ -1,13 +1,13 @@
 /**
  * Created by jdomizio on 10/16/2014.
  */
-define(['knockout', 'jquery', '../../../../../src/tab', 'bootstrap'], function(ko, $, tabs) {
+define(['knockout', 'jquery', 'strapout', 'bootstrap'], function(ko, $, strapout) {
     'use strict';
 
     function ViewModel() {
 
         /** model for 'simple binding' example */
-        this.simple = new tabs.TabList()
+        this.simple = new strapout.TabList()
                    .addTab('Sponges', '#Sponges', true)
                    .addTab('Bricks', '#Bricks')
                    .addTab('Mortar', '#Mortar');

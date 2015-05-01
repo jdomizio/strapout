@@ -1,12 +1,6 @@
-define(function(require) {
-    var ko = require('knockout'),
-        $ =  require('jquery'),
-        util = require('./util'),
-        defaultOptions;
+strapout.Modal = (function() {
 
-    require('bootstrap');
-
-    defaultOptions = {
+    var defaultOptions = {
         show: false
     };
 
@@ -59,7 +53,7 @@ define(function(require) {
             }
         }
         else {
-            util.setObservableProperty('isOpen', params, this);
+            setObservableProperty('isOpen', params, this);
             if(params.options) {
                 this.options = $.extend(this.options, params.options);
             }
@@ -98,8 +92,8 @@ define(function(require) {
     };
 
     ko.bindingHandlers['modal'] = {
-        init: util.initBindingHandler(Modal)
+        init: initBindingHandler(Modal)
     };
 
     return Modal;
-});
+})();

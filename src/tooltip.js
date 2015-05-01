@@ -2,15 +2,7 @@
  * ViewModel for a bootstrap tooltip
  * 12/5/2014 - Added comments, constructor options
  */
-define(function(require) {
-    'use strict';
-
-    var $ = require('jquery'),
-        ko = require('knockout'),
-        util = require('./util');
-
-    require('bootstrap');
-
+strapout.Tooltip = (function() {
     /**
      * Represents a bootstrap tooltip
      * @constructor
@@ -18,8 +10,8 @@ define(function(require) {
     function Tooltip(params) {
         params = params || {};
 
-        this.title = util.createObservable(params.title);
-        this.isOpen = util.createObservable(params.isOpen || false);
+        this.title = createObservable(params.title);
+        this.isOpen = createObservable(params.isOpen || false);
         this.options = params.options || {};
 
         /** Set by knockout binding */
@@ -53,8 +45,8 @@ define(function(require) {
             }
         }
         else {
-            util.setObservableProperty('title', params, this);
-            util.setObservableProperty('isOpen', params, this);
+            setObservableProperty('title', params, this);
+            setObservableProperty('isOpen', params, this);
             if (params.options) {
                 $.extend(this.options, params.options);
             }
@@ -134,8 +126,8 @@ define(function(require) {
     };
 
     ko.bindingHandlers['tooltip'] = {
-        init: util.initBindingHandler(Tooltip)
+        init: initBindingHandler(Tooltip)
     };
 
     return Tooltip;
-});
+})();

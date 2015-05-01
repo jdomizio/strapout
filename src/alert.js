@@ -5,7 +5,7 @@ define(function(require) {
 
     var ko = require('knockout'),
         $ = require('jquery'),
-        util = require('./util'),
+        util = require('./util/util'),
         defaultTemplate;
 
     require('bootstrap');

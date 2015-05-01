@@ -1,12 +1,4 @@
-define(function(require) {
-    'use strict';
-
-    var $ = require('jquery'),
-        ko = require('knockout'),
-        util = require('./util');
-
-    require('bootstrap');
-
+strapout.RadioButton = (function() {
 
     function RadioButton() {
         this.element = null;
@@ -22,7 +14,7 @@ define(function(require) {
         if(params instanceof RadioButton) {
         }
         else {
-            util.setObservableProperty('selected', params, this);
+            setObservableProperty('selected', params, this);
         }
 
         this.element = element;
@@ -57,8 +49,8 @@ define(function(require) {
     };
 
     ko.bindingHandlers['radioButton'] = {
-        init: util.initBindingHandler(RadioButton)
+        init: initBindingHandler(RadioButton)
     };
 
     return RadioButton;
-});
+})();

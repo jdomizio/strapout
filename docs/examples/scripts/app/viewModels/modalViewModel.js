@@ -1,4 +1,4 @@
-define(['knockout', 'jquery', '../../../../../src/modal', 'bootstrap'], function(ko, $, Modal) {
+define(['knockout', 'jquery', 'strapout', 'bootstrap'], function(ko, $, strapout) {
 
     /**
      * Creates a new Viewmodel
@@ -6,7 +6,7 @@ define(['knockout', 'jquery', '../../../../../src/modal', 'bootstrap'], function
      */
     function ModalViewModel() {
 
-        this.simpleModal = new Modal({
+        this.simpleModal = new strapout.Modal({
             data: {
                 title: 'it\'s a dialog',
                 body: 'is this great or what?'

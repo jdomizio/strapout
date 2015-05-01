@@ -1,11 +1,4 @@
-define(function(require) {
-    'use strict';
-
-    var $ = require('jquery'),
-        ko = require('knockout'),
-        util = require('./util');
-
-    require('bootstrap');
+strapout.ToggleButton = (function() {
 
     function ToggleButton() {
         this.active = ko.observable(false);
@@ -30,7 +23,7 @@ define(function(require) {
         if(params instanceof ToggleButton) {
         }
         else {
-            util.setObservableProperty('active', params, this);
+            setObservableProperty('active', params, this);
         }
 
         this.element = element;
@@ -54,8 +47,8 @@ define(function(require) {
     };
 
     ko.bindingHandlers['toggleButton'] = {
-        init: util.initBindingHandler(ToggleButton)
+        init: initBindingHandler(ToggleButton)
     };
 
     return ToggleButton;
-});
+})();
