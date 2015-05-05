@@ -10,15 +10,19 @@ strapout.Modal = (function() {
         this.isOpen = ko.observable(false);
         this.options = defaultOptions;
         this.element = null;
+
+        this._needsToAppend = false;
     }
 
     Modal.prototype.open = function() {
-        //if(this.isOpen()) return;
+        if(this._needsToAppend) {
+            $(this.element).appendTo(this.options.appendTo);
+            this._needsToAppend = false;
+        }
         $(this.element).modal('show');
     };
 
     Modal.prototype.close = function() {
-        //if(!this.isOpen()) return;
         $(this.element).modal('hide');
     };
 
@@ -61,7 +65,7 @@ strapout.Modal = (function() {
         this.isOpen(this.options.show);
 
         if(this.options.appendTo) {
-            $(element).appendTo(this.options.appendTo);
+            this._needsToAppend = true;
         }
         $(element).modal(this.options);
 

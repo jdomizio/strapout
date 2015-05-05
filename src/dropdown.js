@@ -1,3 +1,5 @@
+// TODO: Implement 'manual' option
+
 strapout.Dropdown = (function() {
 
     function Dropdown(params) {
@@ -5,18 +7,27 @@ strapout.Dropdown = (function() {
 
         this.isOpen = createObservable(params.isOpen || false);
         this.element = null;
+        this.options = $.extend({}, params.options);
+
+        this._forceClose = false; //used to determine if dropdown should close if sticky option is enabled.
+        this._isOpening = false;
     }
 
     Dropdown.prototype.init = function(element, valueAccessor, allBindings) {
         var self = this,
             params,
             $element,
-            $elementParent;
+            $elementParent,
+            $target;
 
         params = valueAccessor();
 
         if(!(params instanceof Dropdown) && ko.isObservable(params)) {
             this.isOpen = params;
+        }
+
+        if(allBindings.has('dropdownOptions')) {
+            this.options = $.extend(this.options, allBindings.get('dropdownOptions'));
         }
 
         // initialize the plugin
@@ -28,26 +39,57 @@ strapout.Dropdown = (function() {
             $element.attr('data-toggle', 'dropdown');
         }
         $element.dropdown();
+        $elementParent = $element.parent();
 
-        // subscribe to popover events
+        if($element.attr('data-target')) {
+            $target = $($element.attr('data-target'));
+        }
+        else {
+            $target = $($elementParent.children().get(1));
+        }
+
         if(ko.isWriteableObservable(this.isOpen)) {
-            $elementParent = $element.parent();
             $elementParent.on('show.bs.dropdown', function(e) {
                 if(self.isOpen()) {
                     return false;
+                }
+                if(self.options.sticky) {
+                    self._isOpening = true;
                 }
             });
             $elementParent.on('shown.bs.dropdown', function(e) {
                 self.isOpen(true);
             });
             $elementParent.on('hide.bs.dropdown', function(e) {
-                if(!self.isOpen()) {
+                if(!self.isOpen() || (self.options.sticky && !self._forceClose)) {
                     return false;
+                }
+                if(self.options.sticky && self._forceClose) {
+                    self._forceClose = false;
                 }
             });
             $elementParent.on('hidden.bs.dropdown', function(e) {
                 self.isOpen(false);
             });
+            if(this.options.sticky) {
+                $(element).on('click.bs.dropdown', function(e) {
+                    if(!self._isOpening && self.isOpen()) {
+                        self.close(true);
+                    }
+                    if(self._isOpening) {
+                        self._isOpening = false;
+                    }
+                });
+                $(window).on('click.bs.dropdown.data-api', function(e) {
+                    // check to see if user clicked outside of dropdown element
+                    if (!self._isOpening && $(e.originalEvent.target).closest($target).length == 0) {
+                        self.close(true);
+                    }
+                    if(self._isOpening) {
+                        self._isOpening = false;
+                    }
+                });
+            }
         }
 
         // propagate observable changes to bootstrap
@@ -64,13 +106,21 @@ strapout.Dropdown = (function() {
         }
     };
 
-    Dropdown.prototype.close = function() {
+    Dropdown.prototype.close = function(force) {
         if(this.isOpen()) {
+            if(force && this.options.sticky) {
+                this._forceClose = true;
+            }
             $(this.element).dropdown('toggle');
         }
     };
 
-    Dropdown.prototype.toggle = function() {
+    Dropdown.prototype.toggle = function(force) {
+        if(this.isOpen()) {
+            if(force && this.options.sticky) {
+                this._forceClose = true;
+            }
+        }
         $(this.element).dropdown('toggle');
     };
 

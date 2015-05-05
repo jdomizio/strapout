@@ -6,7 +6,7 @@
             'jquery': 'lib/jquery.min',
             'bootstrap': 'lib/bootstrap.min',
             'knockout': 'lib/knockout',
-            'strapout': 'lib/strapout.min'
+            'strapout': 'lib/strapout'
         },
         shim: {
             'bootstrap': {
