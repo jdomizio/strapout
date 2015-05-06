@@ -82,8 +82,19 @@ strapout.Dropdown = (function() {
                 });
                 $(window).on('click.bs.dropdown.data-api', function(e) {
                     // check to see if user clicked outside of dropdown element
-                    if (!self._isOpening && $(e.originalEvent.target).closest($target).length == 0) {
-                        self.close(true);
+
+                    var $original = $(e.originalEvent.target),
+                        isException = false;
+
+                    if(self.options.include) {
+                        $.each(self.options.include, function(index, item) {
+                            if(!isException && $original.closest(item).length) {
+                                isException = true;
+                            }
+                        });
+                    }
+                    if (!self._isOpening && $original.closest($target).length == 0) {
+                        !isException && self.close(true);
                     }
                     if(self._isOpening) {
                         self._isOpening = false;
