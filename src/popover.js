@@ -32,7 +32,11 @@ strapout.Popover = (function() {
      */
     Popover.prototype.init = function(element, valueAccessor, allBindings) {
         var self = this,
-            params;
+            params,
+            onShow,
+            onShown,
+            onHide,
+            onHidden;
 
         params = valueAccessor();
 
@@ -77,23 +81,35 @@ strapout.Popover = (function() {
         this.element = element;
         $(element).popover(this.options);
 
+        onShow = function() {
+            if(self.isOpen()) {
+                return false;
+            }
+        };
+        onShown = function() {
+            self.isOpen(true);
+        };
+        onHide = function() {
+            if(!self.isOpen()) {
+                return false;
+            }
+        };
+        onHidden = function() {
+            self.isOpen(false);
+        };
+
         // subscribe to popover events
         if(ko.isWriteableObservable(this.isOpen)) {
-            $(element).on('show.bs.popover', function() {
-                if(self.isOpen()) {
-                    return false;
-                }
-            });
-            $(element).on('shown.bs.popover', function() {
-                self.isOpen(true);
-            });
-            $(element).on('hide.bs.popover', function() {
-                if(!self.isOpen()) {
-                    return false;
-                }
-            });
-            $(element).on('hidden.bs.popover', function() {
-                self.isOpen(false);
+            $(element).on('show.bs.popover', onShow);
+            $(element).on('shown.bs.popover', onShown);
+            $(element).on('hide.bs.popover', onHide);
+            $(element).on('hidden.bs.popover', onHidden);
+
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                $(element).off('show.bs.popover', onShow);
+                $(element).off('shown.bs.popover', onShown);
+                $(element).off('hide.bs.popover', onHide);
+                $(element).off('hidden.bs.popover', onHidden);
             });
         }
 

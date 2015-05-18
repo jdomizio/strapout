@@ -35,7 +35,11 @@ strapout.Tooltip = (function() {
      */
     Tooltip.prototype.init = function(element, valueAccessor, allBindings) {
         var self = this,
-            params;
+            params,
+            onShow,
+            onShown,
+            onHide,
+            onHidden;
 
         params = valueAccessor();
 
@@ -64,27 +68,35 @@ strapout.Tooltip = (function() {
         this.element = element;
         $(element).tooltip(this.options);
 
+        onShow = function() {
+            if(self.isOpen()) {
+                return false;
+            }
+        };
+        onShown = function() {
+            self.isOpen(true);
+        };
+        onHide = function() {
+            if(!self.isOpen()) {
+                return false;
+            }
+        };
+        onHidden = function() {
+            self.isOpen(false);
+        };
+
         // subscribe to tooltip events
         if(ko.isWriteableObservable(this.isOpen)) {
+            $(element).on('show.bs.tooltip', onShow);
+            $(element).on('shown.bs.tooltip', onShown);
+            $(element).on('hide.bs.tooltip', onHide);
+            $(element).on('hidden.bs.tooltip', onHidden);
 
-            $(element).on('show.bs.tooltip', function() {
-                if(self.isOpen()) {
-                    return false;
-                }
-            });
-
-            $(element).on('shown.bs.tooltip', function() {
-                self.isOpen(true);
-            });
-
-            $(element).on('hide.bs.tooltip', function() {
-                if(!self.isOpen()) {
-                    return false;
-                }
-            });
-
-            $(element).on('hidden.bs.tooltip', function() {
-                self.isOpen(false);
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                $(element).off('show.bs.tooltip', onShow);
+                $(element).off('shown.bs.tooltip', onShown);
+                $(element).off('hide.bs.tooltip', onHide);
+                $(element).off('hidden.bs.tooltip', onHIdden);
             });
         }
 

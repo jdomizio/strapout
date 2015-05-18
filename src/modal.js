@@ -46,7 +46,9 @@ strapout.Modal = (function() {
 
     Modal.prototype.init = function(element, valueAccessor, allBindings, viewModel, bindingContext) {
         var self = this,
-            params;
+            params,
+            onShow,
+            onHidden;
 
         params = valueAccessor();
         this.element = element;
@@ -80,12 +82,21 @@ strapout.Modal = (function() {
                 }
             })
         }
+
+        onShow = function() {
+            self.isOpen(true);
+        };
+        onHidden = function() {
+            self.isOpen(false);
+        };
+
         if(ko.isWriteableObservable(this.isOpen)) {
-            $(element).on('show.bs.modal', function() {
-                self.isOpen(true);
-            });
-            $(element).on('hidden.bs.modal', function() {
-                self.isOpen(false);
+            $(element).on('show.bs.modal', onShow);
+            $(element).on('hidden.bs.modal', onHidden);
+
+            ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                $(element).off('show.bs.modal', onShow);
+                $(element).off('hidden.bs.modal', onHidden);
             });
         }
 
