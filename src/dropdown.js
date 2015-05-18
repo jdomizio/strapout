@@ -18,7 +18,13 @@ strapout.Dropdown = (function() {
             params,
             $element,
             $elementParent,
-            $target;
+            $target,
+            onShow,
+            onShown,
+            onHide,
+            onHidden,
+            onStickyClick,
+            onStickyDataApi;
 
         params = valueAccessor();
 
@@ -48,60 +54,83 @@ strapout.Dropdown = (function() {
             $target = $($elementParent.children().get(1));
         }
 
-        if(ko.isWriteableObservable(this.isOpen)) {
-            $elementParent.on('show.bs.dropdown', function(e) {
-                if(self.isOpen()) {
-                    return false;
-                }
-                if(self.options.sticky) {
-                    self._isOpening = true;
-                }
-            });
-            $elementParent.on('shown.bs.dropdown', function(e) {
-                self.isOpen(true);
-            });
-            $elementParent.on('hide.bs.dropdown', function(e) {
-                if(!self.isOpen() || (self.options.sticky && !self._forceClose)) {
-                    return false;
-                }
-                if(self.options.sticky && self._forceClose) {
-                    self._forceClose = false;
-                }
-            });
-            $elementParent.on('hidden.bs.dropdown', function(e) {
-                self.isOpen(false);
-            });
-            if(this.options.sticky) {
-                $(element).on('click.bs.dropdown', function(e) {
-                    if(!self._isOpening && self.isOpen()) {
-                        self.close(true);
-                    }
-                    if(self._isOpening) {
-                        self._isOpening = false;
-                    }
-                });
-                $(window).on('click.bs.dropdown.data-api', function(e) {
-                    // check to see if user clicked outside of dropdown element
+        onShow = function(e) {
+            if(self.isOpen()) {
+                return false;
+            }
+            if(self.options.sticky) {
+                self._isOpening = true;
+            }
+        };
 
-                    var $original = $(e.originalEvent.target),
-                        isException = false;
+        onShown = function(e) {
+            self.isOpen(true);
+        };
 
-                    if(self.options.include) {
-                        $.each(self.options.include, function(index, item) {
-                            if(!isException && $original.closest(item).length) {
-                                isException = true;
-                            }
-                        });
-                    }
-                    if (!self._isOpening && $original.closest($target).length == 0) {
-                        !isException && self.close(true);
-                    }
-                    if(self._isOpening) {
-                        self._isOpening = false;
+        onHide = function(e) {
+            if(!self.isOpen() || (self.options.sticky && !self._forceClose)) {
+                return false;
+            }
+            if(self.options.sticky && self._forceClose) {
+                self._forceClose = false;
+            }
+        };
+
+        onHidden = function(e) {
+            self.isOpen(false);
+        };
+
+        onStickyClick = function(e) {
+            if(!self._isOpening && self.isOpen()) {
+                self.close(true);
+            }
+            if(self._isOpening) {
+                self._isOpening = false;
+            }
+        };
+
+        onStickyDataApi = function(e) {
+            // check to see if user clicked outside of dropdown element
+
+            var $original = $(e.originalEvent.target),
+                isException = false;
+
+            if(self.options.include) {
+                $.each(self.options.include, function(index, item) {
+                    if(!isException && $original.closest(item).length) {
+                        isException = true;
                     }
                 });
             }
+            if (!self._isOpening && $original.closest($target).length == 0) {
+                !isException && self.close(true);
+            }
+            if(self._isOpening) {
+                self._isOpening = false;
+            }
+        };
+
+        if(ko.isWriteableObservable(this.isOpen)) {
+            $elementParent.on('show.bs.dropdown', onShow);
+            $elementParent.on('shown.bs.dropdown', onShown);
+            $elementParent.on('hide.bs.dropdown', onHide);
+            $elementParent.on('hidden.bs.dropdown', onHidden);
+            if(this.options.sticky) {
+                $(element).on('click.bs.dropdown', onStickyClick);
+                $(window).on('click.bs.dropdown.data-api', onStickyDataApi);
+            }
         }
+
+        ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+            $elementParent.off('show.bs.dropdown', onShow);
+            $elementParent.off('shown.bs.dropdown', onShown);
+            $elementParent.off('hide.bs.dropdown', onHide);
+            $elementParent.off('hidden.bs.dropdown', onHidden);
+            if(self.options.sticky) {
+                $(element).off('click.bs.dropdown', onStickyClick);
+                $(window).off('click.bs.dropdown.data-api', onStickyDataApi);
+            }
+        });
 
         // propagate observable changes to bootstrap
         if(ko.isSubscribable(this.isOpen)) {
