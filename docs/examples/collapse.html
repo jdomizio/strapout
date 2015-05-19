@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <script data-main="scripts/main" src="scripts/lib/require.js"></script>
+</head>
+<body>
+<article id="app" class="container" data-bind="with: collapse">
+    <section class="row">
+        <h1 class="page-header">Collapse</h1>
+        <p>
+            A binding to handle the toggling of a bootstrap collapsible section
+        </p>
+    </section>
+    <section class="row">
+        <h3>Basic Example</h3>
+        <p>This shows the default behavior for the binding and viewModel.  The binding is applied to the element that is to trigger the collapse.</p>
+        <div class="panel panel-default">
+            <section class="panel-body">
+                <h4>Demo</h4>
+                <button class="btn btn-default" data-toggle="collapse" data-target="#simpleSection" data-bind="text: simple.isOpen() ? 'Collapse' : 'Expand'"></button>
+                <div id="simpleSection" class="collapse" data-bind="collapse: simple">
+                    <div class="well">
+                        I am collapsible!
+                    </div>
+                </div>
+            </section>
+            <footer class="panel-footer">
+                <section>
+                    <h4>Binding Code</h4>
+                    <pre>Hello Dolly</pre>
+                </section>
+                <section>
+                    <h4>ViewModel</h4>
+                    <pre>this.simple = new strapout.Collapse();</pre>
+                </section>
+            </footer>
+        </div>
+    </section>
+
+    <footer class="row text-center">
+        <a href="index.html">Back</a>
+    </footer>
+</article>
+</body>
+</html>

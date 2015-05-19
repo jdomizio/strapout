@@ -52,6 +52,7 @@ module.exports = function(grunt) {
                     'src/toggleButton.js',
                     'src/tab.js',
                     'src/tooltip.js',
+                    'src/collapse.js',
                     'src/util/end.frag'
                 ],
                 dest: 'dist/strapout.js'

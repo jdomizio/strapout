@@ -24,14 +24,15 @@ function createObservable(value) {
     return ko.isObservable(value) ? value : ko.observable(value);
 }
 
-function initBindingHandler(Type) {
+function initBindingHandler(Type, initMethod) {
     return function (element, valueAccessor, allBindings) {
         var params = valueAccessor(),
             instance;
 
         instance = (params instanceof Type) ? params : new Type();
+        initMethod = initMethod || 'init';
 
-        return instance.init(element, valueAccessor, allBindings);
+        return instance[initMethod](element, valueAccessor, allBindings);
     };
 }
 

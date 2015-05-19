@@ -1,55 +1,98 @@
-/**
- * Created by Jason on 8/23/2014.
- */
-;define(['knockout', 'jquery', 'bootstrap'], function(ko, $) {
-    "use strict";
+strapout.Collapse = (function() {
 
-    function Collapse() {
+    function Collapse(params) {
+        $.extend(this, {
+            isOpen: ko.observable(false),
+            options: {}
+        }, params);
+
+        this.element = null;
     }
 
-    Collapse.prototype.init = function(element, valueAccessor) {
-        var value, $element, options;
+    $.extend(Collapse.prototype, {
+        'initCollapse': function(element, valueAccessor, allBindings) {
+            var self = this,
+                bindingParams,
+                onShow,
+                onShown,
+                onHide,
+                onHidden;
 
-        value = valueAccessor();
-        $element = $(element);
+            bindingParams = valueAccessor();
+            this.element = element;
 
-        $element.collapse(value.options);
-
-        if(value.isOpen && ko.isSubscribable(value.isOpen)) {
-            value.isOpen.subscribe(function(newValue) {
-                if(newValue) {
-                    $(element).collapse('show');
+            if(bindingParams instanceof Collapse) {
+                if(allBindings.has('collapseOptions')) {
+                    $.extend(this.options, allBindings.get('collapseOptions'));
                 }
-                else {
-                    $(element).collapse('hide');
-                }
-            });
-        }
-        if(ko.isWriteableObservable(value.isOpen)) {
-            if(value.options.toggle) {
-                value.isOpen(true);
             }
-            $element.on('shown.bs.collapse', function() {
-                value.isOpen(true);
-            });
-            $element.on('hidden.bs.collapse', function() {
-                value.isOpen(false);
-            })
-        }
+            else {
+                setObservableProperty('isOpen', bindingParams, this);
+                if(bindingParams.options) {
+                    $.extend(this.options, bindingParams.options);
+                }
+            }
+            this.isOpen(this.options.show);
 
-        return {
-            controlsDescendantBindings: false
-        };
-    };
+            $(element).collapse(this.options);
+
+            //if(this.isOpen && ko.isSubscribable(this.isOpen)) {
+            //    this.isOpen.subscribe(function(newValue) {
+            //        if(newValue) {
+            //            $(element).collapse('show');
+            //        }
+            //        else {
+            //            $(element).collapse('hide');
+            //        }
+            //    });
+            //}
+
+            onShown = function() {
+                self.isOpen(true);
+            };
+            onHidden = function() {
+                self.isOpen(false);
+            };
+
+            if(ko.isWriteableObservable(this.isOpen)) {
+                if(this.options.toggle) {
+                    this.isOpen(true);
+                }
+                $(element).on('shown.bs.collapse', onShown);
+                $(element).on('hidden.bs.collapse', onHidden);
+
+                ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+                    $(element).off('shown.bs.collapse', onShown);
+                    $(element).off('show.bs.collapse', onHidden);
+                });
+            }
+
+            // inner elements should already be bound
+            return {
+                controlsDescendantBindings: false
+            };
+        },
+
+        'initCollapsible': function(element, valueAccessor, allBindings) {
+
+        },
+
+        'open': function() {
+            $(this.element).collapse('show');
+        },
+
+        'close': function() {
+            $(this.element).collapse('hide');
+        }
+    });
 
     ko.bindingHandlers['collapse'] = {
-        init: function() {
-            var collapse = new Collapse();
-            collapse.init.apply(collapse, arguments);
-        }
+        init: initBindingHandler(Collapse, 'initCollapse')
     };
 
-    return {
-        Collapse: Collapse
+    ko.bindingHandlers['collapsible'] = {
+        init: initBindingHandler(Collapse, 'initCollapsible')
     };
-});
+
+    return Collapse;
+})();

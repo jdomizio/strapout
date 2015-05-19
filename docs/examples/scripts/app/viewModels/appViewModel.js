@@ -9,7 +9,8 @@ define(function(require) {
         tooltip = require('./tooltipViewModel'),
         popover = require('./popoverViewModel'),
         button = require('./buttonViewModel'),
-        tab = require('./tabViewModel');
+        tab = require('./tabViewModel'),
+        collapse = require('./collapseViewModel');
         //alertDialog = require('./alertViewModel');
 
     function AppViewModel() {
@@ -19,6 +20,7 @@ define(function(require) {
         this.popover = new popover.ViewModel();
         this.button = new button.ViewModel();
         this.tab = new tab.ViewModel();
+        this.collapse = new collapse.ViewModel();
         //this.alertDialog = new alertDialog.ViewModel();
     }
 
