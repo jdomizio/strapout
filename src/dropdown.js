@@ -65,6 +65,9 @@ strapout.Dropdown = (function() {
 
         onShown = function(e) {
             self.isOpen(true);
+            if(self.options.sticky) {
+                $(element).siblings('.dropdown-backdrop').remove();
+            }
         };
 
         onHide = function(e) {

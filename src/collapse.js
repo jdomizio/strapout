@@ -3,10 +3,12 @@ strapout.Collapse = (function() {
     function Collapse(params) {
         $.extend(this, {
             isOpen: ko.observable(false),
+            enabled: ko.observable(true),
             options: {}
         }, params);
 
         this.element = null;
+        this.trigger = null;
     }
 
     $.extend(Collapse.prototype, {
@@ -73,10 +75,6 @@ strapout.Collapse = (function() {
             };
         },
 
-        'initCollapsible': function(element, valueAccessor, allBindings) {
-
-        },
-
         'open': function() {
             $(this.element).collapse('show');
         },
@@ -88,10 +86,6 @@ strapout.Collapse = (function() {
 
     ko.bindingHandlers['collapse'] = {
         init: initBindingHandler(Collapse, 'initCollapse')
-    };
-
-    ko.bindingHandlers['collapsible'] = {
-        init: initBindingHandler(Collapse, 'initCollapsible')
     };
 
     return Collapse;
