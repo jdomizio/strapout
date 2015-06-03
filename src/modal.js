@@ -48,7 +48,8 @@ strapout.Modal = (function() {
         var self = this,
             params,
             onShow,
-            onHidden;
+            onHidden,
+            closeOnEscape;
 
         params = valueAccessor();
         this.element = element;
@@ -83,11 +84,16 @@ strapout.Modal = (function() {
             })
         }
 
+        closeOnEscape = function(e) {
+            e.which === 27 && self.close();
+        };
         onShow = function() {
             self.isOpen(true);
+            $(window).on('keydown', closeOnEscape);
         };
         onHidden = function() {
             self.isOpen(false);
+            $(window).off('keydown', closeOnEscape);
         };
 
         if(ko.isWriteableObservable(this.isOpen)) {
