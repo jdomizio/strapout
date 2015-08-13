@@ -11,7 +11,7 @@ strapout.Popover = (function() {
         this.content = createObservable(params.content); // body text
         this.isOpen = createObservable(params.isOpen || false);
         this.template = createObservable(params.template);
-        this.options = params.options || {};
+        this.initialOptions = params.options || {};
         this.element = null;
     }
 
@@ -36,13 +36,16 @@ strapout.Popover = (function() {
             onShow,
             onShown,
             onHide,
-            onHidden;
+            onHidden,
+            options;
 
         params = valueAccessor();
 
+        options = $.extend({}, this.initialOptions);
+
         if(params instanceof Popover) {
             if(allBindings.has('popoverOptions')) {
-                $.extend(this.options, allBindings.get('popoverOptions'));
+                $.extend(options, allBindings.get('popoverOptions'));
             }
         }
         else {
@@ -55,31 +58,31 @@ strapout.Popover = (function() {
             }
         }
         // set title from options and ensure options is set from current value of title
-        if(this.options.title) {
-            this.title(this.options.title);
+        if(options.title) {
+            this.title(options.title);
         }
         else if(typeof this.title() !== 'undefined') {
-            this.options.title = this.title();
+            options.title = this.title();
         }
 
         // set content from options and ensure options is set from current value of content
-        if(this.options.content) {
-            this.content(this.options.content);
+        if(options.content) {
+            this.content(options.content);
         }
         else if(typeof this.content() !== 'undefined') {
-            this.options.content = this.content();
+            options.content = this.content();
         }
 
         if(this.options.template) {
-            this.template(this.options.template);
+            this.template(options.template);
         }
         else if(typeof this.template() !== 'undefined') {
-            this.options.template = this.template();
+            options.template = this.template();
         }
 
         // initialize the plugin
         this.element = element;
-        $(element).popover(this.options);
+        $(element).popover(options);
 
         onShow = function() {
             if(self.isOpen()) {
